@@ -42,6 +42,43 @@ void setup() {
 	// Activate pullups.
 	// In the form pinMode(pin, INPUT_PULLUP)
 
+	pinMode(L1, INPUT_PULLUP);
+	pinMode(L2, INPUT_PULLUP);
+	pinMode(L3, INPUT_PULLUP);
+	pinMode(L4, INPUT_PULLUP);
+	pinMode(L5, INPUT_PULLUP);
+	pinMode(L6, INPUT_PULLUP);
+	pinMode(L7, INPUT_PULLUP);
+	pinMode(L8, INPUT_PULLUP);
+	pinMode(R1, INPUT_PULLUP);
+	pinMode(R2, INPUT_PULLUP);
+	pinMode(R3, INPUT_PULLUP);
+	pinMode(R4, INPUT_PULLUP);
+	pinMode(R5, INPUT_PULLUP);
+	pinMode(R6, INPUT_PULLUP);
+	pinMode(R7, INPUT_PULLUP);
+	pinMode(R8, INPUT_PULLUP);
+	delay(10);  // Allow the pullups to be set without
+				// worrying about catching it halfway.
+
+	// Assign buttons to the Bounce items.
+	// Only doing the left side for now until we test it.
+	LB1.attach(L1); // Attach pin to Bounce.
+	LB1.interval(5); // Sets debounce to 5ms.
+	LB2.attach(L2);
+	LB2.interval(5);
+	LB3.attach(L3); 
+	LB3.interval(5);
+	LB4.attach(L4); 
+	LB4.interval(5); 
+	LB5.attach(L5); 
+	LB5.interval(5); 
+	LB6.attach(L6);
+	LB6.interval(5); 
+	LB7.attach(L7); 
+	LB7.interval(5);
+	LB8.attach(L8); 
+	LB8.interval(5); 
 }
 
 // Look to www.pjrc.com/teensy/td_keyboard.html
@@ -54,15 +91,55 @@ void setup() {
 
 void loop() {
 	
+	updateKeys();
+	readKeys();
 
-	
+	// Doing it simply for now, just using Keyboard.print
+	// In future we likely want to modify the packets 
+	// manually.
+	Keyboard.print(getKey());
 }
+
+
+// Only left keys for now until we test.
+void updateKeys() {
+
+	LB1.update();
+	LB2.update();
+	LB3.update();
+	LB4.update();
+	LB5.update();
+	LB6.update();
+	LB7.update();
+	LB8.update();
+}
+
+// Only left for now until we test.
+void readKeys() {
+
+	leftButtons[0] = LB1.read();
+	leftButtons[1] = LB2.read();
+	leftButtons[2] = LB3.read();
+	leftButtons[3] = LB4.read();
+	leftButtons[4] = LB5.read();
+	leftButtons[5] = LB6.read();
+	leftButtons[6] = LB7.read();
+	leftButtons[7] = LB8.read();
+
+	// shift them correctly
+	for (int i = 1; i < 7; i++) {
+		leftButtons[i] = leftButtons[i] << i;
+	}
+}
+
+}
+
 
 /*
  * Read the keys, then shift them each over to their respective
  * places. We can then sum the array to arrive at a unique key 
  * identifier.
- * See eekkeysv2.h for more information.
+ * See TeesnyKeys.h for more information.
  */
 
  // TODO: Update this to use the Bounce Library!
@@ -93,6 +170,8 @@ void readKeys() {
 		rightButtons[i] rightButtons[i] << i + 7; 
 	}
 }
+
+*/
 
 int getKey() {
 	// Sum arrays to get unique identifier.
